@@ -1,5 +1,6 @@
 package br.com.alura.agenda.ui.activity;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.widget.EditText;
 
 import br.com.alura.agenda.R;
 import br.com.alura.agenda.dao.AlunoDAO;
+import br.com.alura.agenda.database.AgendaDatabase;
+import br.com.alura.agenda.database.dao.RoomAlunoDAO;
 import br.com.alura.agenda.model.Aluno;
 
 import static br.com.alura.agenda.ui.activity.ConstantesActivities.CHAVE_ALUNO;
@@ -20,13 +23,21 @@ public class FormularioAlunoActivity extends AppCompatActivity {
     private EditText campoNome;
     private EditText campoTelefone;
     private EditText campoEmail;
-    private final AlunoDAO dao = new AlunoDAO();
+    private RoomAlunoDAO dao;
     private Aluno aluno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_aluno);
+        //
+        AgendaDatabase database = Room.databaseBuilder(this, AgendaDatabase.class, AgendaDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .build();
+        dao = database
+                .getRoomAlunoDAO();
+
+        //
         inicializacaoDosCampos();
         carregaAluno();
     }
