@@ -5,19 +5,38 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import br.com.alura.agenda.database.dao.RoomAlunoDAO;
+import br.com.alura.agenda.database.dao.AlunoDAO;
 import br.com.alura.agenda.model.Aluno;
 
-@Database(entities = {Aluno.class}, version = 1,exportSchema = false)
+@Database(entities = {Aluno.class}, version = 2,exportSchema = false)
 public abstract class AgendaDatabase extends RoomDatabase {
+    /**
+     * Padrão Singleton
+     */
+    //    public static final String DATABASE_NAME = "agenda.db";
+//    private static AgendaDatabase instance;
+//    public abstract AlunoDAO getRoomAlunoDAO();
+//
+//    public static synchronized AgendaDatabase getInstance(Context context){
+//        if(instance == null) {
+//            instance = Room.databaseBuilder(context, AgendaDatabase.class, AgendaDatabase.DATABASE_NAME)
+//                    .allowMainThreadQueries()
+//                    .build();
+//        }
+//        return instance;
+//
+//    }
+
     public static final String DATABASE_NAME = "agenda.db";
 
-    public abstract RoomAlunoDAO getRoomAlunoDAO();
+    public abstract AlunoDAO getRoomAlunoDAO();
 
-    public static AgendaDatabase getInstance(Context context){
+    public static synchronized AgendaDatabase getInstance(Context context){
         return Room.databaseBuilder(context, AgendaDatabase.class, AgendaDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()//Drop o banco ao trocar versão
                 .build();
 
     }
+
 }
