@@ -1,14 +1,21 @@
 package br.com.alura.agenda.database;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import br.com.alura.agenda.database.converter.ConversorCalendar;
 import br.com.alura.agenda.database.dao.AlunoDAO;
 import br.com.alura.agenda.model.Aluno;
 
-@Database(entities = {Aluno.class}, version = 2,exportSchema = false)
+@Database(entities = {Aluno.class}, version = 4,exportSchema = false)
+//Notacao que indica as classes de conversoes de tipos do Java para o Sqlite
+@TypeConverters({ConversorCalendar.class})
 public abstract class AgendaDatabase extends RoomDatabase {
     /**
      * Padrão Singleton
@@ -34,7 +41,8 @@ public abstract class AgendaDatabase extends RoomDatabase {
     public static synchronized AgendaDatabase getInstance(Context context){
         return Room.databaseBuilder(context, AgendaDatabase.class, AgendaDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()//Drop o banco ao trocar versão
+                //.fallbackToDestructiveMigration()//Drop o banco ao trocar versão
+                .addMigrations(AgendaMigrations.TODAS_MIGRATIONS)
                 .build();
 
     }
