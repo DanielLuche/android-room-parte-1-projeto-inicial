@@ -43,7 +43,7 @@ public abstract class AgendaDatabase extends RoomDatabase {
 
     public static synchronized AgendaDatabase getInstance(Context context){
         return Room.databaseBuilder(context, AgendaDatabase.class, AgendaDatabase.DATABASE_NAME)
-                .allowMainThreadQueries()
+                //.allowMainThreadQueries() //
                 //.fallbackToDestructiveMigration()//Drop o banco ao trocar versão
                 .addMigrations(AgendaMigrations.TODAS_MIGRATIONS)
                 .build();
